@@ -243,7 +243,7 @@
   },
 
   "ARC-e": {
-    "file_name": "/common-sense-reasoning/ARC-e_train.json",
+    "file_name": "./common-sense-reasoning/ARC-e_train.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -261,7 +261,7 @@
   },
 
   "ARC-c": {
-    "file_name": "ARC-c_train.json",
+    "file_name": "./common-sense-reasoning/ARC-c_train.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
