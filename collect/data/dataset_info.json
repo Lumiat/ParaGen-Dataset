@@ -1,6 +1,6 @@
 {
   "Math-Vista": {
-    "file_name": "Math-Vista.json",
+    "file_name": "./multimodal/Math-Vista.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -8,7 +8,7 @@
     }
   },
   "Math-Vision": {
-    "file_name": "Math-Vision.json",
+    "file_name": "./math/Math-Vision.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -37,7 +37,7 @@
   },
 
   "MathV360K": {
-    "file_name": "MathV360K.json",
+    "file_name": "./multimodal/MathV360K.json",
     "formatting": "sharegpt",
     "columns": {
       "messages": "conversations",
@@ -46,7 +46,7 @@
   },
 
   "Math-IIO-68K-Mini": {
-    "file_name": "Math-IIO-68K-Mini.json",
+    "file_name": "./math/Math-IIO-68K-Mini.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -55,7 +55,7 @@
   },
 
   "Math-Plus": {
-    "file_name": "Math-Plus.json",
+    "file_name": "./math/Math-Plus.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -64,7 +64,7 @@
   },
 
   "ToT-Math-V1": {
-    "file_name": "ToT-Math-V1.json",
+    "file_name": "./math/ToT-Math-V1.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -72,7 +72,7 @@
     }
   },
   "Mu-Math": {
-    "file_name": "Mu-Math.json",
+    "file_name": "./math/Mu-Math.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -80,7 +80,7 @@
     }
   },
   "Math_QA": {
-    "file_name": "Math_QA.json",
+    "file_name": "./math/Math_QA.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -88,7 +88,7 @@
     }
   },
   "Competition_Math": {
-    "file_name": "Competition_Math.json",
+    "file_name": "./math/Competition_Math.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -96,7 +96,7 @@
     }
   },
   "Evol-Instruct-Code-80K-V1": {
-    "file_name": "Evol-Instruct-Code-80K-V1.json",
+    "file_name": "./coding/Evol-Instruct-Code-80K-V1.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -104,7 +104,7 @@
     }
   },
   "Code-74k-ShareGPT": {
-    "file_name": "Code-74k-ShareGPT.json",
+    "file_name": "./coding/Code-74k-ShareGPT.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -112,7 +112,7 @@
     }
   },
   "CodeAlpaca-20K": {
-    "file_name": "CodeAlpaca-20K.json",
+    "file_name": "./coding/CodeAlpaca-20K.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -128,7 +128,7 @@
     }
   },
   "Glaive-Code-Assistant-V2": {
-    "file_name": "Glaive-Code-Assistant-V2.json",
+    "file_name": "./coding/Glaive-Code-Assistant-V2.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -136,7 +136,7 @@
     }
   },
   "LLaMA-Python-Codes-30K": {
-    "file_name": "LLaMA-Python-Codes-30K.json",
+    "file_name": "./coding/LLaMA-Python-Codes-30K.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -144,7 +144,7 @@
     }
   },
   "Python-Codes-25K": {
-    "file_name": "Python-Codes-25K.json",
+    "file_name": "./coding/Python-Codes-25K.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -152,7 +152,7 @@
     }
   },
   "Rosetta-Code": {
-    "file_name": "Rosetta-Code.json",
+    "file_name": "./coding/Rosetta-Code.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -160,7 +160,7 @@
     }
   },
   "BoolQ_test": {
-    "file_name": "BoolQ_validation.json",
+    "file_name": "./common-sense-reasoning/BoolQ_validation.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -168,7 +168,7 @@
     }
   },
   "PIQA_test": {
-    "file_name": "PIQA_test.json",
+    "file_name": "./common-sense-reasoning/PIQA_test.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -176,7 +176,7 @@
     }
   },
   "HellaSwag_test": {
-    "file_name": "HellaSwag_validation.json",
+    "file_name": "./common-sense-reasoning/HellaSwag_validation.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -184,7 +184,7 @@
     }
   },
   "WinoGrande_test": {
-    "file_name": "WinoGrande_validation.json",
+    "file_name": "./common-sense-reasoning/WinoGrande_validation.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -192,7 +192,7 @@
     }
   },
   "ARC-e_test": {
-    "file_name": "ARC-e_test.json",
+    "file_name": "./common-sense-reasoning/ARC-e_test.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -200,7 +200,7 @@
     }
   },
   "ARC-c_test": {
-    "file_name": "ARC-c_test.json",
+    "file_name": "./common-sense-reasoning/ARC-c_test.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -208,7 +208,7 @@
     }
   },
   "OBQA_test": {
-    "file_name": "OBQA_test.json",
+    "file_name": "./common-sense-reasoning/OBQA_test.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -216,7 +216,7 @@
     }
   },
   "BoolQ": {
-    "file_name": "BoolQ_train.json",
+    "file_name": "./common-sense-reasoning/BoolQ_train.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -225,7 +225,7 @@
   },
 
   "PIQA": {
-    "file_name": "PIQA_train.json",
+    "file_name": "./common-sense-reasoning/PIQA_train.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -234,7 +234,7 @@
   },
 
   "HellaSwag": {
-    "file_name": "HellaSwag_train.json",
+    "file_name": "./common-sense-reasoning/HellaSwag_train.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -252,7 +252,7 @@
   },
 
   "WinoGrande": {
-    "file_name": "WinoGrande_train.json",
+    "file_name": "./common-sense-reasoning/WinoGrande_train.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
@@ -270,7 +270,7 @@
   },
 
   "OBQA": {
-    "file_name": "OBQA_train.json",
+    "file_name": "./common-sense-reasoning/OBQA_train.json",
     "columns": {
       "prompt": "prompt",
       "response": "response",
