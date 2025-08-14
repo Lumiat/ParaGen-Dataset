@@ -124,3 +124,21 @@ You can then apply your customized template in future training scripts:
 ### other training parameters in your_training_script.yaml
 template: your_template_name
 ```
+
+## Acknowledgements
+
+We gratefully acknowledge the contribution of the [Drag-and-Drop LLMs](https://github.com/jerryliang24/Drag-and-Drop-LLMs) project, from which we sourced preprocessed dataset files and the `dataset_info.json` manifest used and modified in our project. The original data and framework were made available under the terms of the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.html).
+
+For scientific attribution and reproducibility, please cite the foundational work:
+
+```bibtex
+@misc{liang2025draganddropllmszeroshotprompttoweights,
+      title={Drag-and-Drop LLMs: Zero-Shot Prompt-to-Weights},
+      author={Zhiyuan Liang and Dongwen Tang and Yuhao Zhou and Xuanlei Zhao and Mingjia Shi and Wangbo Zhao and Zekai Li and Peihao Wang and Konstantin Schürholt and Damian Borth and Michael M. Bronstein and Yang You and Zhangyang Wang and Kai Wang},
+      year={2025},
+      eprint={2506.16406},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2506.16406},
+}
+```
