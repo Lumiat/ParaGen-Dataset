@@ -4,14 +4,52 @@
 
 The structure of this project is shown below:
 
+```
+ParaGen-Dataset
+├─ 📁collect
+│  ├─ 📁collect_scripts    # scripts for checkpoint collection
+│  │  ├─ 📁coding
+│  │  │  ├─ 📄<model_name>_<dataset_name>_finetune.yaml
+│  │  │  ├─ 📄<model_name>_<dataset_name>_pretrain.yaml
+│  │  │  └─ ...
+│  │  ├─ 📁common-sense-reasoning
+│  │  ├─ 📁math
+│  │  └─ 📁multimodal
+│  ├─ 📁data
+│  │  ├─ 📁coding
+│  │  │  ├─ 📄<dataset_name>.json
+│  │  │  └─ ...
+|  |  ├─ 📁common-sense-reasoning
+│  │  ├─ 📁math
+│  │  ├─ 📁multimodal
+│  │  └─ 📄dataset_info.json
+│  ├─ 📁models    # saved models
+│  └─ 📁utils     # utilities for collection
+│     ├─ 📄download_csr_models.sh
+│     ├─ 📄train_with_rank.sh
+│     └─ ... other utilities
+├─ 📁saves     # saved checkpoints
+|  ├─ 📁coding
+|  |  └─ 📁<dataset_name>
+|  |     ├─ 📁<model_name>_lora-rank_<rank>_finetune
+|  |     └─ 📁<model_name>_lora-rank_<rank>_pretrain
+|  ├─ 📁common-sense-reasoning
+|  ├─ 📁math
+|  └─ 📁multimodal
+├─ 📄.gitignore
+├─ 📄LICENSE
+└─ 📄README.md
+```
+
 ## Collect a new pair
 
 ### Register the dataset
 
-1. Place your dataset file in the dir of corresponding task with the correct form in `.json` format. For example, since ARC-c dataset is for common-sense-reasoning, it should be put under path `ParaGen-Dataset/collect/data/common-sense-reasoning/`.<br>
-   _For tasks categories, we have common-sense-reasoning, coding, math and multimodel_
+1. Place your dataset file in the corresponding task directory, ensuring it is in the correct `.json` format. For example, the ARC-c dataset, which is intended for common-sense reasoning, should be placed in the `ParaGen-Dataset/collect/data/common-sense-reasoning/` directory.<br>
+   _The available task categories are: common-sense reasoning, coding, math, and multimodal._
 
-2. Register the dataset in `ParaGen-Dataset/collect/data/dataset_info.json`. For the record, the key `columns` might varies between datasets.
+2. Register the dataset in `ParaGen-Dataset/collect/data/dataset_info.json`. Note that the `columns` key may vary between datasets.
+
    ```json
    <dataset_name>:
    {
@@ -23,7 +61,8 @@ The structure of this project is shown below:
         },
    }
    ```
-   For more information about the registration of dataset files, please refer to: [LLaMA Factory Documentation-Getting Started-Dataset Preparation](https://llamafactory.readthedocs.io/zh-cn/latest/getting_started/data_preparation.html)
+
+For more details on registering dataset files, refer to the [LLaMA Factory Documentation – Getting Started: Dataset Preparation](https://llamafactory.readthedocs.io/zh-cn/latest/getting_started/data_preparation.html).
 
 ### Download the model
 
@@ -35,36 +74,42 @@ There are three ways to download the model.
    huggingface-cli download <model_name> --local-dir ParaGen-Dataset/collect/models/<model_name>
    ```
 2. Download manually from huggingface<br>
-   Go to the [official site of huggingface](https://huggingface.co/) and search for the model you need. Then see all the model files by: `<REPO_ID>` --> `Files and Versions` and download those necessary.
+   Visit the [official site of huggingface](https://huggingface.co/) and search for the required model. Navigate to `<REPO_ID>` --> `Files and Versions` to view available files then download the necessary ones.
 3. Download with from HF-Mirror<br>
-   If you can't access the official site of huggingface or your connection is unstable, you may switch to the mirror of HF-Mirror.<br>
-   The guidelines for model download is on [HF-Mirror](https://hf-mirror.com/).
+   If you cannot access the official Hugging Face site or have an unstable connection, use the HF-Mirror instead.<br>
+   Detailed instructions are available on the [HF-Mirror website](https://hf-mirror.com/).
 
 ### Checkpoint collection
 
 1. Create script for pretraining
-   Create a new file `<your_model>_<your_dataset>_pretrain.yaml` under path `ParaGen-Dataset/collect/collect_scripts/<your_task_catagory>`. It's not necessary to name the training script in the format above, your can name it anything you want.<br>
-   You can refer to [LLaMA-Factory Documentation-Getting Started-Supervised Fine-tuning](https://llamafactory.readthedocs.io/en/latest/getting_started/sft.html) for more information of the content to be included in the training script.
+   Create a new file named `<your_model>_<your_dataset>_pretrain.yaml` under `ParaGen-Dataset/collect/collect_scripts/<your_task_category>`.  
+   You do not have to follow this exact naming format — you may name the script however you prefer.  
+   For details on what to include in the training script, see the [LLaMA Factory Documentation – Getting Started: Supervised Fine-tuning](https://llamafactory.readthedocs.io/en/latest/getting_started/sft.html).
 2. Pretrain model
-   Pretrain the model with the following command.
+   Pretrain the model with the following command: <br>
    ```bash
    bash ../../utils/train_with_rank.sh <your_training_script>_pretrain.yaml <lora_rank>
    ```
-   This command will pretrain the model with `rank=<lora_rank>` . A temporary file named `<your_model>_<your_dataset>_pretrain_temp_rank_<lora_rank>.yaml` will be created in the same dir that your original `<your_training_script>_pretrain.yaml` is in. It will be deleted after the training process automatically.
-3. Create script for finetuning
-   As shown before, Create a new file `<your_model>_<your_dataset>_finetune.yaml` under path `ParaGen-Dataset/collect/collect_scripts/<your_task_catagory>`.
-   Make sure the value for key `resume_from_checkpoint` is one of the existing checkpoints you just collected from the pretraining process. This will allow the model to finetune the pretrained model from the pretraining process before.
+   This command runs pretraining with rank=<lora*rank>.
+   During execution, a temporary file named
+   <your_model>*<your*dataset>\_pretrain_temp_rank*<lora_rank>.yaml
+   will be created in the same directory as your original <your_training_script>\_pretrain.yaml.
+   It will be automatically deleted after training completes.
+3. As shown earlier, create a new file named `<your_model>_<your_dataset>_finetune.yaml` in the directory  
+    `ParaGen-Dataset/collect/collect_scripts/<your_task_category>`.<br>
+   Ensure that the value of the `resume_from_checkpoint` key is set to one of the checkpoints you collected during the pretraining process. This allows the model to continue training from the pretrained weights obtained earlier.
 4. Collect checkpoints
    Similar to the pretraining process, finetune the model with the following command:
-   ```bash
-    bash ../../utils/train_with_rank.sh <your_training_script>_finetune.yaml <lora_rank>
-   ```
-   It's also okay to collect in batch using a script.
+
+```bash
+ bash ../../utils/train_with_rank.sh <your_training_script>_finetune.yaml <lora_rank>
+```
 
 ### Customize prompt template (Optional)
 
-Some models don't have supported template registered in LLaMA-Factory, therefore there's a chance for you to add the customized template for your model.<br>
-The following code should be added in file `LLaMA-Factory/src/llamafactory/data/template.py`:
+Some models do not have a supported template registered in LLaMA-Factory.  
+In such cases, you can add a custom template for your model.  
+Add the following code to the `LLaMA-Factory/src/llamafactory/data/template.py` file:
 
 ```python
 register_template(
@@ -73,7 +118,7 @@ register_template(
 )
 ```
 
-Then you can use your customized template in training script in the furture:
+You can then apply your customized template in future training scripts:
 
 ```yaml
 ### other training parameters in your_training_script.yaml
