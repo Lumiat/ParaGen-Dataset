@@ -7,7 +7,7 @@ stage: sft
 do_train: true
 finetuning_type: lora
 lora_rank: 8
-lora_target: all
+lora_target: ['c_attn']
 
 ### dataset
 dataset: ARC-c # video: mllm_video_demo
