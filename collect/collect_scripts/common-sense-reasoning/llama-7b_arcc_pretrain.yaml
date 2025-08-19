@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: ../../models/gpt2
+model_name_or_path: ../../models/llama-7b
 trust_remote_code: true
 
 ### method
@@ -7,34 +7,34 @@ stage: sft
 do_train: true
 finetuning_type: lora
 lora_rank: 8
-lora_target: ['c_attn']
+lora_target: all
 
 ### dataset
 dataset: ARC-c 
-template: gpt
-cutoff_len: 1024
+template: llama2
+cutoff_len: 2048 # max_position_embeddings in config.json
 max_samples: 5000
 overwrite_cache: true
 preprocessing_num_workers: 16
 dataset_dir: ../../data
 
 ### output
-output_dir: ../../../saves/common_sense_reasoning/ARC-c/gpt2_lora-rank_8_finetune
+output_dir: ../../../saves/common_sense_reasoning/ARC-c/llama-7b_lora-rank_8_pretrain
 logging_steps: 10
-save_steps: 1
+save_steps: 100
 plot_loss: true
 overwrite_output_dir: true
 
 ### train
 per_device_train_batch_size: 1
-gradient_accumulation_steps: 2
-learning_rate: 1.0e-4
-num_train_epochs: 1.2
+gradient_accumulation_steps: 8
+learning_rate: 5.0e-5
+num_train_epochs: 0.4
 lr_scheduler_type: cosine
 warmup_ratio: 0.01
 bf16: true
 ddp_timeout: 180000000
-resume_from_checkpoint: ../../../saves/common_sense_reasoning/ARC-c/gpt2_lora-rank_8_pretrain/checkpoint-490
+resume_from_checkpoint: False
 ### eval
 # val_size: 0.1
 # per_device_eval_batch_size: 1
