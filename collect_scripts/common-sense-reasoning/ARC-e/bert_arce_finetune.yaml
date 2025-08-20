@@ -10,7 +10,7 @@ lora_rank: 8
 lora_target: all
 
 ### dataset
-dataset: ARC-c 
+dataset: ARC-e
 template: bert_qa
 cutoff_len: 512
 max_samples: 5000
