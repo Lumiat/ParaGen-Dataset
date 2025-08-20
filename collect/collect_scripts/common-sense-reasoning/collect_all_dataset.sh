@@ -2,12 +2,12 @@
 
 # Script for fine-tuning multiple large language models with specific dataset using LoRA
 # This script handles pretraining and fine-tuning for BERT, GPT-2, LLaMA-7B, and Mistral-7B models
-# Usage: ./finetune_models.sh <dataset>
+# Usage: ./collect_all_datasets.sh <dataset>
 
 # Check if dataset parameter is provided
 if [ $# -ne 1 ]; then
     echo "Usage: $0 <dataset>"
-    echo "Example: $0 my_custom_dataset"
+    echo "Example: $0 arcc"
     exit 1
 fi
 
@@ -16,15 +16,16 @@ RANKS=(2 4 8 16 64)
 TRAIN_SCRIPT="../../utils/train_with_rank.sh"
 
 # Define model configurations
-MODELS=("bert" "gpt2" "llama-7b" "mistral-7b")
+# MODELS=("bert" "gpt2" "llama-7b" "mistral-7b" "qwen2.5-0.5b")
+MODELS=("qwen2.5-0.5b")
 
-echo "Starting fine-tuning process for dataset: $DATASET"
+echo "Starting training process for dataset: $DATASET"
 echo "Using ranks: ${RANKS[@]}"
 
-# Function to extract output-dir from yaml file
+# Function to extract output_dir from yaml file
 extract_output_dir() {
     local yaml_file=$1
-    grep "output-dir:" "$yaml_file" | sed 's/.*output-dir: *//g' | tr -d '"' | tr -d "'"
+    grep "output_dir:" "$yaml_file" | sed 's/.*output_dir: *//g' | tr -d '"' | tr -d "'"
 }
 
 # Function to update save_steps in train_state.json
@@ -48,17 +49,23 @@ try:
     
     print('Successfully updated save_steps to 1')
 except Exception as e:
-    print(f'Error updating save_steps: {e}')
-"
+    print(f'Error updating save_steps: {e}', file=sys.stderr)
+    sys.exit(1)
+" 
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to update save_steps in $json_file"
+            return 1
+        fi
     else
         echo "Warning: train_state.json not found at: $json_file"
+        return 1
     fi
 }
 
 # Function to get resume_from_checkpoint path from yaml file
 get_resume_checkpoint_path() {
     local yaml_file=$1
-    grep "resume_from_checkpoint:" "$yaml_file" | sed 's/.*resume_from_checkpoint: *//g' | tr -d '"' | tr -d "'"
+    grep "resume_from_checkpoint:" "$yaml_file" | sed 's/.*resume_from_checkpoint: *//g' | tr -d '"' | tr -d "'" | sed 's/^[ \t]*//;s/[ \t]*$//'
 }
 
 # Main processing loop
@@ -92,22 +99,22 @@ for model in "${MODELS[@]}"; do
         echo "Processing $model with rank: $rank"
         echo "-----------------------------------------------"
         
-        # Step 1: Check if pretrain output directory exists
-        base_output_dir=$(extract_output_dir "$pretrain_config")
-        if [ -z "$base_output_dir" ]; then
-            echo "Error: Could not extract output-dir from $pretrain_config"
+        # Step 1: Check if finetune output directory exists to determine if we need pretraining
+        finetune_output_dir=$(extract_output_dir "$finetune_config")
+        if [ -z "$finetune_output_dir" ]; then
+            echo "Error: Could not extract output_dir from $finetune_config"
             continue
         fi
         
-        # Replace lora_rank number in path with current rank
-        rank_output_dir=$(echo "$base_output_dir" | sed "s/lora_rank[0-9]\+/lora_rank$rank/g")
+        # Replace lora_rank number in finetune output path with current rank
+        rank_finetune_output_dir=$(echo "$finetune_output_dir" | sed "s/lora-rank_[0-9]\+/lora-rank_$rank/g")
         
-        echo "Checking if output directory exists: $rank_output_dir"
+        echo "Checking if finetune output directory exists: $rank_finetune_output_dir"
         
-        if [ -d "$rank_output_dir" ]; then
-            echo "Output directory exists, skipping pretraining for $model with rank $rank"
+        if [ -d "$rank_finetune_output_dir" ]; then
+            echo "Finetune output directory exists, skipping pretraining for $model with rank $rank"
         else
-            echo "Output directory does not exist, starting pretraining..."
+            echo "Finetune output directory does not exist, starting pretraining..."
             echo "Command: bash $TRAIN_SCRIPT $pretrain_config $rank"
             
             # Execute pretraining
@@ -121,14 +128,16 @@ for model in "${MODELS[@]}"; do
             fi
         fi
         
-        # Step 2: Update save_steps in train_state.json from finetune config
+        # Step 2: Update save_steps in trainer_state.json from finetune config
         resume_path=$(get_resume_checkpoint_path "$finetune_config")
-        if [ -n "$resume_path" ]; then
-            train_state_path="${resume_path}/train_state.json"
-            echo "Updating train_state.json at: $train_state_path"
-            update_save_steps "$train_state_path"
+        if [ -n "$resume_path" ] && [ "$resume_path" != "False" ] && [ "$resume_path" != "false" ]; then
+            # Replace lora_rank number in resume path with current rank
+            rank_resume_path=$(echo "$resume_path" | sed "s/lora-rank_[0-9]\+/lora-rank_$rank/g")
+            trainer_state_path="${rank_resume_path}/trainer_state.json"
+            echo "Updating trainer_state.json at: $trainer_state_path"
+            update_save_steps "$trainer_state_path"
         else
-            echo "Warning: Could not find resume_from_checkpoint path in $finetune_config"
+            echo "Warning: No valid resume_from_checkpoint path found in $finetune_config"
         fi
         
         # Step 3: Execute fine-tuning
