@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: ../../models/llama-7b
+model_name_or_path: ../../../models/llama-7b
 trust_remote_code: true
 
 ### method
@@ -10,13 +10,13 @@ lora_rank: 8
 lora_target: all
 
 ### dataset
-dataset: ARC-c 
+dataset: ARC-c
 template: llama2
 cutoff_len: 2048 # max_position_embeddings in config.json
 max_samples: 5000
 overwrite_cache: true
 preprocessing_num_workers: 16
-dataset_dir: ../../data
+dataset_dir: ../../../data
 
 ### output
 output_dir: ../../../saves/common_sense_reasoning/ARC-c/llama-7b_lora-rank_8_finetune

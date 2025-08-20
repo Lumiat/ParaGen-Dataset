@@ -10,7 +10,7 @@ lora_rank: 8
 lora_target: all
 
 ### dataset
-dataset: ARC-c 
+dataset: ARC-c
 template: gemma
 cutoff_len: 2048
 max_samples: 5000
