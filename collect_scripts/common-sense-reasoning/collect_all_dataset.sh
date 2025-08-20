@@ -15,6 +15,37 @@ DATASET=$1
 RANKS=(2 4 8 16 64)
 TRAIN_SCRIPT="../../utils/train_with_rank.sh"
 
+# Define dataset to folder mapping
+declare -A DATASET_MAPPING
+DATASET_MAPPING["arcc"]="ARC-c"
+DATASET_MAPPING["arce"]="ARC-e"
+DATASET_MAPPING["obqa"]="OBQA"
+DATASET_MAPPING["piqa"]="PIQA"
+DATASET_MAPPING["hellaswag"]="HellaSwag"
+DATASET_MAPPING["winogrande"]="WinoGrande"
+DATASET_MAPPING["boolq"]="BOOLQ"
+
+# Get the mapped folder name
+DATASET_FOLDER=${DATASET_MAPPING[$DATASET]}
+if [ -z "$DATASET_FOLDER" ]; then
+    echo "Error: Unknown dataset '$DATASET'. Supported datasets: ${!DATASET_MAPPING[@]}"
+    exit 1
+fi
+
+# Get current script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Define the target config directory
+CONFIG_DIR="$SCRIPT_DIR/DATASET[$DATASET_FOLDER]"
+
+# Check if the dataset folder exists
+if [ ! -d "$CONFIG_DIR" ]; then
+    echo "Error: Dataset folder not found: $CONFIG_DIR"
+    exit 1
+fi
+
+echo "Using dataset folder: $CONFIG_DIR"
+
 # Define model configurations
 # MODELS=("bert" "gpt2" "llama-7b" "mistral-7b" "qwen2.5-0.5b")
 MODELS=("qwen2.5-0.5b")
@@ -74,9 +105,9 @@ for model in "${MODELS[@]}"; do
     echo "Processing model: $model"
     echo "==============================================="
     
-    # Define pretrain and finetune config files
-    pretrain_config="${model}_${DATASET}_pretrain.yaml"
-    finetune_config="${model}_${DATASET}_finetune.yaml"
+    # Define pretrain and finetune config files (now looking in the dataset folder)
+    pretrain_config="${CONFIG_DIR}/${model}_${DATASET}_pretrain.yaml"
+    finetune_config="${CONFIG_DIR}/${model}_${DATASET}_finetune.yaml"
     
     # Check if config files exist
     if [ ! -f "$pretrain_config" ]; then

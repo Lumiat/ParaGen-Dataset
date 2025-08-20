@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: ../../../models/Qwen2.5-0.5B-Instruct
+model_name_or_path: ../../../models/gemma-3-4b-it
 trust_remote_code: true
 
 ### method
@@ -10,8 +10,8 @@ lora_rank: 8
 lora_target: all
 
 ### dataset
-dataset: ARC-e
-template: qwen
+dataset: BoolQ
+template: gemma
 cutoff_len: 2048
 max_samples: 5000
 overwrite_cache: true
@@ -19,7 +19,7 @@ preprocessing_num_workers: 16
 dataset_dir: ../../../data
 
 ### output
-output_dir: ../../../saves/common_sense_reasoning/ARC-e/Qwen2.5-0.5B-Instruct_lora-rank_8_pretrain
+output_dir: ../../../saves/common_sense_reasoning/BoolQ/gemma-3-4b-it_lora-rank_8_pretrain
 logging_steps: 10
 save_steps: 100
 plot_loss: true
