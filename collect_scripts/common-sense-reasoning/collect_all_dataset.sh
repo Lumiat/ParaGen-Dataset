@@ -35,8 +35,8 @@ fi
 # Get current script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Define the target config directory
-CONFIG_DIR="$SCRIPT_DIR/DATASET[$DATASET_FOLDER]"
+# Define the target config directory (absolute path)
+CONFIG_DIR="$SCRIPT_DIR/$DATASET_FOLDER"
 
 # Check if the dataset folder exists
 if [ ! -d "$CONFIG_DIR" ]; then
@@ -44,11 +44,22 @@ if [ ! -d "$CONFIG_DIR" ]; then
     exit 1
 fi
 
+# Change working directory to the dataset folder
+echo "Changing working directory to: $CONFIG_DIR"
+cd "$CONFIG_DIR"
+
+# Verify working directory change
+if [ "$(pwd)" != "$CONFIG_DIR" ]; then
+    echo "Error: Failed to change working directory to $CONFIG_DIR"
+    exit 1
+fi
+
+echo "Current working directory: $(pwd)"
 echo "Using dataset folder: $CONFIG_DIR"
 
 # Define model configurations
-# MODELS=("bert" "gpt2" "llama-7b" "mistral-7b" "qwen2.5-0.5b")
-MODELS=("qwen2.5-0.5b")
+# MODELS=("bert" "gpt2" "llama-7b" "mistral-7b" "qwen2.5-0.5b" "gemma-3-4b")
+MODELS=("bert" "gpt2" "llama-7b" "mistral-7b" "qwen2.5-0.5b")
 
 echo "Starting training process for dataset: $DATASET"
 echo "Using ranks: ${RANKS[@]}"
@@ -99,15 +110,52 @@ get_resume_checkpoint_path() {
     grep "resume_from_checkpoint:" "$yaml_file" | sed 's/.*resume_from_checkpoint: *//g' | tr -d '"' | tr -d "'" | sed 's/^[ \t]*//;s/[ \t]*$//'
 }
 
+# Function to clean up pretrain folders
+cleanup_pretrain_folders() {
+    local dataset_folder=$1
+    local pretrain_save_dir="/research-intern05/xjy/ParaGen-Dataset/saves/common-sense-reasoning/$dataset_folder"
+    
+    echo "-----------------------------------------------"
+    echo "Cleaning up pretrain folders in: $pretrain_save_dir"
+    echo "-----------------------------------------------"
+    
+    if [ -d "$pretrain_save_dir" ]; then
+        # Find and remove directories ending with "pretrain"
+        pretrain_dirs=$(find "$pretrain_save_dir" -maxdepth 1 -type d -name "*pretrain" 2>/dev/null)
+        
+        if [ -n "$pretrain_dirs" ]; then
+            echo "Found pretrain directories to remove:"
+            echo "$pretrain_dirs"
+            
+            # Remove each pretrain directory
+            echo "$pretrain_dirs" | while read -r dir; do
+                if [ -n "$dir" ] && [ -d "$dir" ]; then
+                    echo "Removing: $dir"
+                    rm -rf "$dir"
+                    if [ $? -eq 0 ]; then
+                        echo "Successfully removed: $dir"
+                    else
+                        echo "Error: Failed to remove $dir"
+                    fi
+                fi
+            done
+        else
+            echo "No pretrain directories found to remove in: $pretrain_save_dir"
+        fi
+    else
+        echo "Warning: Save directory does not exist: $pretrain_save_dir"
+    fi
+}
+
 # Main processing loop
 for model in "${MODELS[@]}"; do
     echo "==============================================="
     echo "Processing model: $model"
     echo "==============================================="
     
-    # Define pretrain and finetune config files (now looking in the dataset folder)
-    pretrain_config="${CONFIG_DIR}/${model}_${DATASET}_pretrain.yaml"
-    finetune_config="${CONFIG_DIR}/${model}_${DATASET}_finetune.yaml"
+    # Define pretrain and finetune config files (now in current directory)
+    pretrain_config="${model}_${DATASET}_pretrain.yaml"
+    finetune_config="${model}_${DATASET}_finetune.yaml"
     
     # Check if config files exist
     if [ ! -f "$pretrain_config" ]; then
@@ -146,10 +194,13 @@ for model in "${MODELS[@]}"; do
             echo "Finetune output directory exists, skipping pretraining for $model with rank $rank"
         else
             echo "Finetune output directory does not exist, starting pretraining..."
-            echo "Command: bash $TRAIN_SCRIPT $pretrain_config $rank"
+            
+            # Update TRAIN_SCRIPT path to be relative to current directory
+            RELATIVE_TRAIN_SCRIPT="../../../utils/train_with_rank.sh"
+            echo "Command: bash $RELATIVE_TRAIN_SCRIPT $pretrain_config $rank"
             
             # Execute pretraining
-            bash "$TRAIN_SCRIPT" "$pretrain_config" "$rank"
+            bash "$RELATIVE_TRAIN_SCRIPT" "$pretrain_config" "$rank"
             
             if [ $? -eq 0 ]; then
                 echo "Pretraining completed successfully for $model with rank $rank"
@@ -173,9 +224,9 @@ for model in "${MODELS[@]}"; do
         
         # Step 3: Execute fine-tuning
         echo "Starting fine-tuning..."
-        echo "Command: bash $TRAIN_SCRIPT $finetune_config $rank"
+        echo "Command: bash $RELATIVE_TRAIN_SCRIPT $finetune_config $rank"
         
-        bash "$TRAIN_SCRIPT" "$finetune_config" "$rank"
+        bash "$RELATIVE_TRAIN_SCRIPT" "$finetune_config" "$rank"
         
         if [ $? -eq 0 ]; then
             echo "Fine-tuning completed successfully for $model with rank $rank"
@@ -187,6 +238,9 @@ for model in "${MODELS[@]}"; do
     done
     
     echo "Completed all ranks for model: $model"
+    
+    # Clean up pretrain folders after completing all ranks for this model
+    cleanup_pretrain_folders "$DATASET_FOLDER"
 done
 
 echo "==============================================="
