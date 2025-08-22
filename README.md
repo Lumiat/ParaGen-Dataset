@@ -6,36 +6,38 @@ The structure of this project is shown below:
 
 ```
 ParaGen-Dataset
-├─ 📁collect
-│  ├─ 📁collect_scripts    # scripts for checkpoint collection
-│  │  ├─ 📁coding
-│  │  │  ├─ 📄<model_name>_<dataset_name>_finetune.yaml
-│  │  │  ├─ 📄<model_name>_<dataset_name>_pretrain.yaml
+├─ 📁collect_scripts    # scripts for checkpoint collection
+│  ├─ 📁coding
+│  ├─ 📁common-sense-reasoning
+│  │  ├─ 📁ARC-c
+│  │  │  ├─ 📄<model>_<dataset>_finetune.yaml
+│  │  │  ├─ 📄<model>_<dataset>_pretrain.yaml
 │  │  │  └─ ...
-│  │  ├─ 📁common-sense-reasoning
-│  │  ├─ 📁math
-│  │  └─ 📁multimodal
-│  ├─ 📁data
-│  │  ├─ 📁coding
-│  │  │  ├─ 📄<dataset_name>.json
-│  │  │  └─ ...
-|  |  ├─ 📁common-sense-reasoning
-│  │  ├─ 📁math
-│  │  ├─ 📁multimodal
-│  │  └─ 📄dataset_info.json
-│  ├─ 📁models    # saved models
-│  └─ 📁utils     # utilities for collection
-│     ├─ 📄download_csr_models.sh
-│     ├─ 📄train_with_rank.sh
-│     └─ ... other utilities
+│  │  ├─ 📁ARC-e
+│  │  ├─ 📁...
+│  │  └─ 📄collect_all_dataset.sh
+│  ├─ 📁math
+│  ├─ 📁multimodal
+│  └─ 📄test.yaml
+├─ 📁data
+│  ├─ 📁coding
+│  │  ├─ 📄<dataset_name>.json
+│  │  └─ ...
+|  ├─ 📁common-sense-reasoning
+│  ├─ 📁math
+│  ├─ 📁multimodal
+│  └─ 📄dataset_info.json
+├─ 📁models    # saved models
 ├─ 📁saves     # saved checkpoints
 |  ├─ 📁coding
 |  |  └─ 📁<dataset_name>
 |  |     ├─ 📁<model_name>_lora-rank_<rank>_finetune
 |  |     └─ 📁<model_name>_lora-rank_<rank>_pretrain
-|  ├─ 📁common-sense-reasoning
-|  ├─ 📁math
-|  └─ 📁multimodal
+├─ 📁utils     # utilities for collection
+│  ├─ 📄checkpoint_cleaner.py
+│  ├─ 📄clean_dataset_dir.py
+|  ├─ 📄train_with_rank.sh
+│  └─ ...      # other utilities
 ├─ 📄.gitignore
 ├─ 📄LICENSE
 └─ 📄README.md
