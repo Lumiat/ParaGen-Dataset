@@ -13,7 +13,7 @@ lora_target: all
 dataset: BoolQ
 template: gemma
 cutoff_len: 2048
-max_samples: -1
+### max_samples: -1
 overwrite_cache: true
 preprocessing_num_workers: 16
 dataset_dir: ../../../data
@@ -21,7 +21,7 @@ dataset_dir: ../../../data
 ### output
 output_dir: ../../../saves/common_sense_reasoning/BoolQ/gemma-3-4b-it_lora-rank_8_finetune
 logging_steps: 10
-save_steps: 100
+save_steps: 1
 plot_loss: true
 overwrite_output_dir: true
 
@@ -34,7 +34,7 @@ lr_scheduler_type: cosine
 warmup_ratio: 0.01
 bf16: true
 ddp_timeout: 180000000
-resume_from_checkpoint: ../../../saves/common_sense_reasoning/BoolQ/gemma-3-4b-it_lora-rank_8_pretrain/checkpoint-n
+resume_from_checkpoint: ../../../saves/common_sense_reasoning/BoolQ/gemma-3-4b-it_lora-rank_8_pretrain/checkpoint-2946
 ### eval
 # val_size: 0.1
 # per_device_eval_batch_size: 1

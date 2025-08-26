@@ -59,7 +59,8 @@ echo "Using dataset folder: $CONFIG_DIR"
 
 # Define model configurations
 # MODELS=("bert" "gpt2" "llama-7b" "mistral-7b" "qwen2.5-0.5b" "gemma-3-4b")
-MODELS=("bert" "gpt2" "llama-7b" "mistral-7b" "qwen2.5-0.5b")
+# MODELS=("bert" "gpt2" "llama-7b" "mistral-7b" "qwen2.5-0.5b")
+MODELS=("qwen2.5-0.5b" "gemma-3-4b")
 
 echo "Starting training process for dataset: $DATASET"
 echo "Using ranks: ${RANKS[@]}"

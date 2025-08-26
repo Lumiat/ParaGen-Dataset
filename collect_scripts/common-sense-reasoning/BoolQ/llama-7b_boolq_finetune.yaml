@@ -11,10 +11,9 @@ lora_target: all
 
 ### dataset
 dataset: BoolQ
-template: llama
-2
+template: llama2
 cutoff_len: 2048 # max_position_embeddings in config.json
-max_samples: -1
+### max_samples: -1
 overwrite_cache: true
 preprocessing_num_workers: 16
 dataset_dir: ../../../data
@@ -35,7 +34,7 @@ lr_scheduler_type: cosine
 warmup_ratio: 0.01
 bf16: true
 ddp_timeout: 180000000
-resume_from_checkpoint: ../../../saves/common_sense_reasoning/BoolQ/llama-7b_lora-rank_8_pretrain/checkpoint-56
+resume_from_checkpoint: ../../../saves/common_sense_reasoning/BoolQ/llama-7b_lora-rank_8_pretrain/checkpoint-1179
 ### eval
 # val_size: 0.1
 # per_device_eval_batch_size: 1
