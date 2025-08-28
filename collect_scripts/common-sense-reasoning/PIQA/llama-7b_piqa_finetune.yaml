@@ -34,7 +34,7 @@ lr_scheduler_type: cosine
 warmup_ratio: 0.01
 bf16: true
 ddp_timeout: 180000000
-resume_from_checkpoint: ../../../saves/common_sense_reasoning/PIQA/llama-7b_lora-rank_8_pretrain/checkpoint-56
+resume_from_checkpoint: ../../../saves/common_sense_reasoning/PIQA/llama-7b_lora-rank_8_pretrain/checkpoint-2015
 ### eval
 # val_size: 0.1
 # per_device_eval_batch_size: 1
