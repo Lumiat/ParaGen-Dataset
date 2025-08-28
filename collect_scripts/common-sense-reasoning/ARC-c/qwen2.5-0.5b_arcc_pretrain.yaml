@@ -21,7 +21,7 @@ dataset_dir: ../../../data
 ### output
 output_dir: ../../../saves/common_sense_reasoning/ARC-c/Qwen2.5-0.5B-Instruct_lora-rank_8_pretrain
 logging_steps: 10
-save_steps: 100
+save_steps: 500
 plot_loss: true
 overwrite_output_dir: true
 
@@ -29,7 +29,7 @@ overwrite_output_dir: true
 per_device_train_batch_size: 1
 gradient_accumulation_steps: 8
 learning_rate: 5.0e-5
-num_train_epochs: 4.0
+num_train_epochs: 4.5
 lr_scheduler_type: cosine
 warmup_ratio: 0.01
 bf16: true
